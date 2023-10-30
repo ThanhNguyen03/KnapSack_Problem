@@ -48,7 +48,7 @@
      <property name="title">
       <string>Khối lượng lớn nhất túi có thể mang:</string>
      </property>
-     <widget class="QLineEdit" name="maxWeight_2">
+     <widget class="QLineEdit" name="viewMaxWeight">
       <property name="geometry">
        <rect>
         <x>30</x>

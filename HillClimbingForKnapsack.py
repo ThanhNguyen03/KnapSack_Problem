@@ -38,9 +38,9 @@ def knapsack_hill_climbing(values, weights, max_weight):
     return result_state
 
 
-values = [3, 4, 5, 6, 3, 4, 5, 6, 3, 4, 5,6]
-weights = [2, 3, 4, 5,3, 4, 5, 6,3, 4, 5,6]
-max_weight = 14
+# values = [3, 4, 5, 6, 3, 4, 5, 6, 3, 4, 5,6]
+# weights = [2, 3, 4, 5,3, 4, 5, 6,3, 4, 5,6]
+# max_weight = 14
 
 
 # result = knapsack_hill_climbing(values, weights, max_weight)
@@ -84,19 +84,26 @@ class MainHandle(Ui_MainWindow):
     def Calc(self):
         result_ = knapsack_hill_climbing(self.values, self.weights, self.max_weight)
         # Tạo danh sách để lưu index của các giá trị =1
-        
         # Duyệt qua mảng
         for i, value in enumerate(result_):
             if value == 1:
                 self.indexes.append(i+1)
+            
+        if len(self.indexes)!=0:
+            s=', '.join(str(x) for x in self.indexes)        
+            # Đặt nội dung của QLineEdit
+            self.result.setText(str(s))
+            self.valueresult.setText(str(sum(value * result_[i] for i, value in enumerate(self.values))))
+            self.weightresult.setText(str(sum(weight * result_[i] for i, weight in enumerate(self.weights))))
+            self.updateTableViewColors()
+            self.showTable()
+        else:
+            self.result.setFixedWidth(250)
+            self.result.setText("Không có vật phẩm nào có thể chọn")
+            self.valueresult.setText("0")
+            self.weightresult.setText("0")
+            self.showTable()
 
-        s=', '.join(str(x) for x in self.indexes)        
-        # Đặt nội dung của QLineEdit
-        self.result.setText(str(s))
-        self.valueresult.setText(str(sum(value * result_[i] for i, value in enumerate(self.values))))
-        self.weightresult.setText(str(sum(weight * result_[i] for i, weight in enumerate(self.weights))))
-        self.updateTableViewColors()
-        self.showTable()
     
     def updateTableViewColors(self):
         model = self.tableView.model()
@@ -113,14 +120,16 @@ class MainHandle(Ui_MainWindow):
     def Reset(self):
         self.values.clear()
         self.weights.clear()
-        self.maxWeight_2.clear()
-
+        self.viewMaxWeight.clear()
+        self.result.clear()
+        self.valueresult.clear()
+        self.weightresult.clear()
         self.showTable()
 
     def Submit(self):
         if self.value.text().strip():
             if self.weight.text().strip():
-                self.weights.append(self.weight.text())
+                self.weights.append(int(self.weight.text()))
             else:
                 msg_box = QMessageBox()
                 msg_box.setIcon(QMessageBox.Warning)
@@ -129,7 +138,7 @@ class MainHandle(Ui_MainWindow):
                 msg_box.addButton(QMessageBox.Close)
                 msg_box.exec_()
 
-            self.values.append(self.value.text())
+            self.values.append(int(self.value.text()))
         else:
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Warning)
@@ -140,7 +149,7 @@ class MainHandle(Ui_MainWindow):
 
         if self.maxWeight.text().strip():
             self.max_weight = int(self.maxWeight.text())
-        self.maxWeight_2.setText(str(self.max_weight))
+        self.viewMaxWeight.setText(str(self.max_weight))
 
         self.value.clear()
         self.weight.clear()
